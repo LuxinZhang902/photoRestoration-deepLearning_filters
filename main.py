@@ -59,6 +59,7 @@ directory_path = './pics'
 image_paths = get_image_paths(directory_path)
 
 for path in image_paths:
+    
     score = clarity_score(path)
     if score is not None:
         print(f"Clarity score for {path}: {score}")

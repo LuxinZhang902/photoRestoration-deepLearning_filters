@@ -1,6 +1,9 @@
 import os
-import cv2
-import numpy as np
+
+from algorithms.color import calculate_color_score
+from algorithms.noise import calculate_noise_score
+from algorithms.clarity import calculate_clarity_score
+from algorithms.ISO import calculate_iso_score
 
 
 def get_image_paths(directory):
@@ -22,75 +25,12 @@ def get_image_paths(directory):
 
 
 
-def clarity_score(image_path):
-    """
-    Calculate the clarity score of the given image using Gaussian Blur.
-
-    Parameters:
-    image_path(List: A list of images' paths)
-
-    Returns:
-    score (double): The final score of clarity
-
-    Author: Luxin Zhang
-    """
-    # Read the image
-    original_image = cv2.imread(image_path)
-    if original_image is None:
-        return None
-
-    # Apply Gaussian Blur
-    blurred_image = cv2.GaussianBlur(original_image, (5, 5), 0)
-
-    # Calculate the difference between the original and blurred images
-    difference = cv2.absdiff(original_image, blurred_image)
-
-    # Convert the difference to grayscale
-    gray_difference = cv2.cvtColor(difference, cv2.COLOR_BGR2GRAY)
-
-    # Calculate the clarity score as the mean of the gray difference
-    score = np.mean(gray_difference)
-    
-    return score
-
-
-
-def score_iso(iso):
-    """
-    Scores a photo based on its ISO value.
-    Lower ISO values receive higher scores.
-
-    Parameters:
-    iso (double): The ISO value extracted from the pic itself
-
-    Returns:
-    double: The given score for ISO
-
-    Author: Luxin Zhang
-    """
-
-    if iso <= 100:
-        score = 10  # Highest score for ISO 100 or lower
-    elif iso <= 200:
-        score = 9
-    elif iso <= 400:
-        score = 8
-    elif iso <= 800:
-        score = 7
-    elif iso <= 1600:
-        score = 6
-    elif iso <= 3200:
-        score = 5
-    else:
-        score = 4  # Lower score for very high ISO values
-
-    return score
 
 
 def restoration_score(clarity_score, iso_score, noise_score, color_score, clarity_weight, iso_weight, noise_weight, color_weight):
     """
     Calculates a general score for photo restoration based on clarity, ISO, noise, and color scores.
-    
+
     Author: Luxin Zhang
     """
 
@@ -111,14 +51,30 @@ if __name__ == "__main__":
 
     for path in image_paths:
         
-        score = clarity_score(path)
+        score = calculate_clarity_score(path)
         if score is not None:
             print(f"Clarity score for {path}: {score}")
 
 
     # Testing ISO
     iso_value = 3000
-    print(f"Score for ISO {iso_value}: {score_iso(iso_value)}")
+    print(f"Score for ISO {iso_value}: {calculate_iso_score(iso_value)}")
+
+    # Testing Color Score
+    image_path_color = 'pics/colorful.jpg'
+    image_path_gray = 'pics/OIP.jpeg'
+    color_score = calculate_color_score(image_path_color)
+    gray_score = calculate_color_score(image_path_gray)
+    print(f"Color score for the color image: {color_score}")
+    print(f"Color score for the gray image: {gray_score}")
+
+    # Testing Noise Score
+    # image_path_noise = 'test_img/noise1.jpeg'
+    # image_path_clear = 'test_img/clear1.jpg'
+    score_noise = calculate_noise_score(image_path_color)
+    score_clear = calculate_noise_score(image_path_gray)
+    print(f"Noise score for the noise image: {score_noise}")
+    print(f"Noise score for the noise clear: {score_clear}")
 
 
     # Testing general score

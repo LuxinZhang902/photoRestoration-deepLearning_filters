@@ -54,13 +54,85 @@ def clarity_score(image_path):
     return score
 
 
-# Testing
-directory_path = './pics'
-image_paths = get_image_paths(directory_path)
 
-for path in image_paths:
+def score_iso(iso):
+    """
+    Scores a photo based on its ISO value.
+    Lower ISO values receive higher scores.
+
+    Parameters:
+    iso (double): The ISO value extracted from the pic itself
+
+    Returns:
+    double: The given score for ISO
+
+    Author: Luxin Zhang
+    """
+
+    if iso <= 100:
+        score = 10  # Highest score for ISO 100 or lower
+    elif iso <= 200:
+        score = 9
+    elif iso <= 400:
+        score = 8
+    elif iso <= 800:
+        score = 7
+    elif iso <= 1600:
+        score = 6
+    elif iso <= 3200:
+        score = 5
+    else:
+        score = 4  # Lower score for very high ISO values
+
+    return score
+
+
+def restoration_score(clarity_score, iso_score, noise_score, color_score, clarity_weight, iso_weight, noise_weight, color_weight):
+    """
+    Calculates a general score for photo restoration based on clarity, ISO, noise, and color scores.
     
-    score = clarity_score(path)
-    if score is not None:
-        print(f"Clarity score for {path}: {score}")
+    Author: Luxin Zhang
+    """
+
+    total_weight = clarity_weight + iso_weight + noise_weight + color_weight
+    if total_weight != 1:
+        raise ValueError("The sum of weights must be 1.")
+
+    restoration_score = (clarity_score * clarity_weight) + (iso_score * iso_weight) + \
+                        (noise_score * noise_weight) + (color_score * color_weight)
+    
+    return restoration_score
+
+
+if __name__ == "__main__": 
+    # Testing
+    directory_path = './pics'
+    image_paths = get_image_paths(directory_path)
+
+    for path in image_paths:
+        
+        score = clarity_score(path)
+        if score is not None:
+            print(f"Clarity score for {path}: {score}")
+
+
+    # Testing ISO
+    iso_value = 3000
+    print(f"Score for ISO {iso_value}: {score_iso(iso_value)}")
+
+
+    # Testing general score
+    clarity_score = 8.5  # hypothetical clarity score
+    iso_score = 14      # hypothetical ISO score
+    noise_score = 7.5   # hypothetical noise score
+    color_score = 9.0   # hypothetical color score
+
+    # Weights for each score
+    clarity_weight = 0.3  # 30%
+    iso_weight = 0.2      # 20%
+    noise_weight = 0.3    # 30%
+    color_weight = 0.2    # 20%
+
+    restoration_score = restoration_score(clarity_score, iso_score, noise_score, color_score, clarity_weight, iso_weight, noise_weight, color_weight)
+    print(f"Restoration Score: {restoration_score}")
 

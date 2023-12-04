@@ -1,6 +1,7 @@
-import matplotlib.pyplot as plt
 import os
 from PIL import Image
+from tqdm import tqdm
+import matplotlib.pyplot as plt
 
 # Paths to your directories
 dir1 = './OldPic'
@@ -8,7 +9,7 @@ dir2 = './OldPic'
 dir3 = './Real-ESRGAN_out'
 
 # Paths to your directories
-output_dir = 'path/to/out'
+output_dir = 'compare_out'
 
 # Create output directory if it doesn't exist
 if not os.path.exists(output_dir):
@@ -22,7 +23,7 @@ images3 = sorted(os.listdir(dir3))
 # Number of images to compare
 num_images = len(images1)
 
-for i in range(num_images):
+for i in tqdm(range(num_images), desc="Processing Images"):
     fig, axs = plt.subplots(1, 3, figsize=(15, 5))
 
     img1 = Image.open(os.path.join(dir1, images1[i]))

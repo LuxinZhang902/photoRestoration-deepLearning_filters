@@ -1,4 +1,27 @@
-def calculate_iso_score(iso):
+from PIL import Image
+from PIL.ExifTags import TAGS
+
+def get_iso(image_path):
+    # Open the image file
+    img = Image.open(image_path)
+
+    # Extract EXIF data
+    exif_data = img._getexif()
+
+    # Convert EXIF data to human-readable form
+    labeled_exif = {TAGS[key]: value for key, value in exif_data.items() if key in TAGS}
+
+    # Extract ISO score
+    iso_score = labeled_exif.get('ISOSpeedRatings', None)
+
+
+    return iso_score
+
+
+def calculate_iso_score(image_path):
+    iso = get_iso(image_path)
+    print("iso is ")
+    print(type(iso))
     """
     Scores a photo based on its ISO value.
     Lower ISO values receive higher scores.
@@ -11,6 +34,7 @@ def calculate_iso_score(iso):
 
     Author: Luxin Zhang
     """
+
 
     if iso <= 100:
         score = 10  # Highest score for ISO 100 or lower

@@ -46,49 +46,42 @@ def restoration_score(clarity_score, iso_score, noise_score, color_score, clarit
 
 if __name__ == "__main__": 
     # Testing
-    directory_path = './pics'
+    directory_path = './OldPic'
     image_paths = get_image_paths(directory_path)
+
+    clarity_list = []
+    noise_list = []
+    ISO_list = []
+    color_list = []
+    general_list = []
 
     for path in image_paths:
         
-        score = calculate_clarity_score(path)
-        if score is not None:
-            print(f"Clarity score for {path}: {score}")
+        clarity_score = calculate_clarity_score(path)
+        clarity_list.append(clarity_score)
 
+        noise_score = calculate_noise_score(path)
+        noise_list.append(noise_score)
 
-    # Testing ISO
-    iso_value = 3000
-    print(f"Score for ISO {iso_value}: {calculate_iso_score(iso_value)}")
+        # iso_score = calculate_iso_score(path)
+        iso_score = 2000
+        ISO_list.append(iso_score)
 
-    # Testing Color Score
-    image_path_color = 'pics/colorful.jpg'
-    image_path_gray = 'pics/OIP.jpeg'
-    color_score = calculate_color_score(image_path_color)
-    gray_score = calculate_color_score(image_path_gray)
-    print(f"Color score for the color image: {color_score}")
-    print(f"Color score for the gray image: {gray_score}")
+        color_score = calculate_color_score(path)
+        color_list.append(color_score)
 
-    # Testing Noise Score
-    # image_path_noise = 'test_img/noise1.jpeg'
-    # image_path_clear = 'test_img/clear1.jpg'
-    score_noise = calculate_noise_score(image_path_color)
-    score_clear = calculate_noise_score(image_path_gray)
-    print(f"Noise score for the noise image: {score_noise}")
-    print(f"Noise score for the noise clear: {score_clear}")
+        # Weights for each score
+        clarity_weight = 0.3  # 30%
+        iso_weight = 0.2      # 20%
+        noise_weight = 0.3    # 30%
+        color_weight = 0.2    # 20%
 
+        final_score = restoration_score(clarity_score, iso_score, noise_score, color_score, clarity_weight, iso_weight, noise_weight, color_weight)
+        print(f"Restoration Score: {restoration_score}")
+        general_list.append(final_score)
 
-    # Testing general score
-    clarity_score = 8.5  # hypothetical clarity score
-    iso_score = 14      # hypothetical ISO score
-    noise_score = 7.5   # hypothetical noise score
-    color_score = 9.0   # hypothetical color score
-
-    # Weights for each score
-    clarity_weight = 0.3  # 30%
-    iso_weight = 0.2      # 20%
-    noise_weight = 0.3    # 30%
-    color_weight = 0.2    # 20%
-
-    restoration_score = restoration_score(clarity_score, iso_score, noise_score, color_score, clarity_weight, iso_weight, noise_weight, color_weight)
-    print(f"Restoration Score: {restoration_score}")
-
+print(f'Clarity list: {clarity_list}\n')
+print(f'Noise list: {noise_list}\n')
+print(f'ISO list: {ISO_list}\n')
+print(f'Color list: {color_list}\n')
+print(f'General list: {general_list}\n')

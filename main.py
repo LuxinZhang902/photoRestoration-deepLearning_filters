@@ -38,7 +38,7 @@ def restoration_score(clarity_score, iso_score, noise_score, color_score, clarit
     if total_weight != 1:
         raise ValueError("The sum of weights must be 1.")
 
-    restoration_score = (clarity_score * clarity_weight) + (iso_score * iso_weight) + \
+    restoration_score = (clarity_score * clarity_weight) + \
                         (noise_score * noise_weight) + (color_score * color_weight)
     
     return restoration_score
@@ -71,10 +71,10 @@ if __name__ == "__main__":
         color_list.append(color_score)
 
         # Weights for each score
-        clarity_weight = 0.3  # 30%
+        clarity_weight = 0.4  # 40%
         iso_weight = 0.2      # 20%
-        noise_weight = 0.3    # 30%
-        color_weight = 0.2    # 20%
+        noise_weight = 0.1    # 10%
+        color_weight = 0.3    # 30%
 
         final_score = restoration_score(clarity_score, iso_score, noise_score, color_score, clarity_weight, iso_weight, noise_weight, color_weight)
         general_list.append(final_score)

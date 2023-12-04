@@ -77,7 +77,6 @@ if __name__ == "__main__":
         color_weight = 0.2    # 20%
 
         final_score = restoration_score(clarity_score, iso_score, noise_score, color_score, clarity_weight, iso_weight, noise_weight, color_weight)
-        print(f"Restoration Score: {restoration_score}")
         general_list.append(final_score)
 
 print(f'Clarity list: {clarity_list}\n')

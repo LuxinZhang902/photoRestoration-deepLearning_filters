@@ -8,7 +8,7 @@ def calculate_noise_score(image_path):
 
     noise_score = np.std(gray_image)
 
-    return noise_score
+    return noise_score * 0.1
 
 # image_path_noise = 'test_img/noise1.jpeg'
 # image_path_clear = 'test_img/clear1.jpg'

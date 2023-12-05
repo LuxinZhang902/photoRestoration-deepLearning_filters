@@ -25,15 +25,15 @@ def compareImage(dir1, dir2, dir3, output_dir):
         img3 = Image.open(os.path.join(dir3, images3[i]))
 
         axs[0].imshow(img1)
-        axs[0].set_title(f"Image {i+1} from Dir1")
+        axs[0].set_title(f"Image {i+1} from Old")
         axs[0].axis('off')
 
         axs[1].imshow(img2)
-        axs[1].set_title(f"Image {i+1} from Dir2")
+        axs[1].set_title(f"Image {i+1} from Deep Learning Algo")
         axs[1].axis('off')
 
         axs[2].imshow(img3)
-        axs[2].set_title(f"Image {i+1} from Dir3")
+        axs[2].set_title(f"Image {i+1} from Self-implemented Algo")
         axs[2].axis('off')
 
         # Save the figure

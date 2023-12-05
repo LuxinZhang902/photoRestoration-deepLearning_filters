@@ -5,6 +5,7 @@ from algorithms.color import calculate_color_score
 from algorithms.noise import calculate_noise_score
 from algorithms.clarity import calculate_clarity_score
 from algorithms.contrast import calculate_contrast
+# from algorithms.clarity_test import calculate_clarity_score
 from compare import compareImage
 
 
@@ -63,11 +64,13 @@ def restoration_score(clarity_score, contrast_score, noise_score, color_score, c
     """
 
     total_weight = clarity_weight + contrast_weight + noise_weight + color_weight
+    # print(total_weight)
     if total_weight != 1:
         raise ValueError("The sum of weights must be 1.")
 
-    restoration_score = (clarity_score * clarity_weight) + (contrast_score * contrast_weight) -  \
-                        (noise_score * noise_weight) + (color_score * color_weight)
+    restoration_score = (color_score * color_weight) - (noise_score * noise_weight) - \
+                        (clarity_score * clarity_weight) + (contrast_score * contrast_weight)
+                        
     
     return restoration_score
 
@@ -102,10 +105,10 @@ def calculate_score(directory_path):
 
 
         # Weights for each score
-        clarity_weight = 0.4  # 40%
+        clarity_weight = 0.4       # 40%
         contrast_weight = 0.2      # 20%
-        noise_weight = 0.1    # 10%
-        color_weight = 0.3    # 30%
+        noise_weight = 0.3         # 30%
+        color_weight = 1 - clarity_weight - contrast_weight - noise_weight    # 10%
 
         final_score = restoration_score(clarity_score, contrast_score, noise_score, color_score, clarity_weight, contrast_weight, noise_weight, color_weight)
         final_list.append(final_score)

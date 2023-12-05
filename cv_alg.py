@@ -18,7 +18,7 @@ def sharpen_image(origin_img):
 def cmp_clarity(img):
     """
     Calculate the clarity score of the given image using Gaussian Blur.
-    Input:img  matrix
+    Input: image 2D matrix
     Output: socre double
     """
     # Apply Gaussian Blur
@@ -34,8 +34,13 @@ def cmp_clarity(img):
     score = np.mean(gray_difference)
     return score
 
+
 def self_imp_alg(img):
-    
+    """
+    Do four types of processing and using clarity as the score to choose the one with best performance
+    Input: image 2D matrix
+    Output: image 2D matrix
+    """
     k_size = 5
     kernel_size=(5,5)
     sigmaX=0
@@ -66,10 +71,14 @@ def self_imp_alg(img):
     
     # Find the key corresponding to the largest value
     best_filter = max(clarity.items(), key=lambda x: x[1])[0]
-    
     return result_imgs[best_filter]
 
+
 def remove_existed_img(directory_path):
+    """
+    Ensure each time the output file is empty
+    Input: output file path str
+    """
     # Remove all files in the directory
     for filename in os.listdir(directory_path):
         file_path = os.path.join(directory_path, filename)
@@ -81,7 +90,9 @@ def remove_existed_img(directory_path):
         except Exception as e:
             print(f"Error removing {file_path}: {e}")
     print("Empty the file successfully.")
-    
+
+
+
 if __name__ == "__main__":
     input_file_path = "./Old pic/"
     output_file_path = "./alg result/"

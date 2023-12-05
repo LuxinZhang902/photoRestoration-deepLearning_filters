@@ -65,7 +65,7 @@ def restoration_score(clarity_score, contrast_score, noise_score, color_score, c
     if total_weight != 1:
         raise ValueError("The sum of weights must be 1.")
 
-    restoration_score = (clarity_score * clarity_weight) + (contrast_score * contrast_weight) - \
+    restoration_score = (clarity_score * clarity_weight) + (contrast_score * contrast_weight) -  \
                         (noise_score * noise_weight) + (color_score * color_weight)
     
     return restoration_score

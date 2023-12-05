@@ -5,6 +5,7 @@ from algorithms.color import calculate_color_score
 from algorithms.noise import calculate_noise_score
 from algorithms.clarity import calculate_clarity_score
 from algorithms.contrast import calculate_contrast
+from compare import compareImage
 
 
 def get_image_paths(directory):
@@ -118,17 +119,24 @@ def calculate_score(directory_path):
     return [clarity_list, noise_list, contrast_list, color_list, final_list]
 
 if __name__ == "__main__":
+
+    OldPic_list = './OldPic'
     print('Scores for old pictures')
-    old_list = calculate_score('./OldPic')
+    old_list = calculate_score(OldPic_list)
 
+    DlPic_list = './DlPic'
     print('Scores for deep learning pictures')
-    dp_list = calculate_score('./DlPic')
+    dp_list = calculate_score(DlPic_list)
 
+    SelfPic_list = './SelfPic'
     print('Scores for self-implemented algorithm')
-    self_list = calculate_score('./SelfPic')
+    self_list = calculate_score(SelfPic_list)
 
     # Export the result into the excel
     export_excel(old_list, dp_list, self_list)
+
+    # Compare the result
+    compareImage(OldPic_list, DlPic_list, SelfPic_list, output_dir='result_out')
 
     # # test
     # print("old_list: ", old_list)

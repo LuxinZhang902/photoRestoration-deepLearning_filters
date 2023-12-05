@@ -94,8 +94,8 @@ def remove_existed_img(directory_path):
 
 
 if __name__ == "__main__":
-    input_file_path = "./Old pic/"
-    output_file_path = "./alg result/"
+    input_file_path = "./OldPic/"
+    output_file_path = "./SelfPic/"
     remove_existed_img(output_file_path)
     
     # total picture number

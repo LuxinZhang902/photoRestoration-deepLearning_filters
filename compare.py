@@ -5,11 +5,11 @@ import matplotlib.pyplot as plt
 
 # Paths to your directories
 dir1 = './OldPic'
-dir2 = './OldPic'
-dir3 = './Real-ESRGAN_out'
+dir2 = './SelfPic'
+dir3 = './DlPic'
 
 # Paths to your directories
-output_dir = 'compare_out'
+output_dir = 'result_out'
 
 # Create output directory if it doesn't exist
 if not os.path.exists(output_dir):

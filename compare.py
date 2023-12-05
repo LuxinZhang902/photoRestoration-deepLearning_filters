@@ -9,7 +9,7 @@ dir2 = './SelfPic'
 dir3 = './DlPic'
 
 # Paths to your directories
-output_dir = 'result_out'
+output_dir = 'result'
 
 # Create output directory if it doesn't exist
 if not os.path.exists(output_dir):

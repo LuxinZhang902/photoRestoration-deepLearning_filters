@@ -1,9 +1,10 @@
 import os
+import pandas as pd
 
 from algorithms.color import calculate_color_score
 from algorithms.noise import calculate_noise_score
 from algorithms.clarity import calculate_clarity_score
-from algorithms.ISO import calculate_iso_score
+from algorithms.contrast import calculate_contrast
 
 
 def get_image_paths(directory):
@@ -15,8 +16,6 @@ def get_image_paths(directory):
 
     Returns:
     List: A list of images' paths
-
-    Author: Luxin Zhang
     """
     extensions = ['.jpg', '.jpeg', '.png'] # It supports three different extensions, add more if needed
     image_paths = [os.path.join(directory, file) for file in os.listdir(directory) 
@@ -24,63 +23,114 @@ def get_image_paths(directory):
     return image_paths
 
 
+def export_excel(old_score, dl_score, self_score):
+    column = ["Picture {}".format(i + 1) for i in range(16)]
+
+    old_df = pd.DataFrame({'clarity_score': old_score[0],
+                           'noise_score': old_score[1],
+                           'contrast_score': old_score[2],
+                           'color_score': old_score[3],
+                           'restoration_score': old_score[4]})
+    
+    dl_df = pd.DataFrame({'clarity_score': dl_score[0],
+                          'noise_score': dl_score[1],
+                          'contrast_score': dl_score[2],
+                          'color_score': dl_score[3],
+                          'restoration_score': dl_score[4]})
+    
+    self_df = pd.DataFrame({'clarity_score': self_score[0],
+                            'noise_score': self_score[1],
+                            'contrast_score': self_score[2],
+                            'color_score': self_score[3],
+                            'restoration_score': self_score[4]})
+    
+    old_df.columns = ['old_' + col for col in old_df.columns]
+    dl_df.columns = ['dl_' + col for col in dl_df.columns]
+    self_df.columns = ['self_' + col for col in self_df.columns]
+    
+    combined_df = pd.concat([old_df, dl_df, self_df], axis=1)
+    
+    combined_df.insert(0, 'Picture', column)
+    
+    combined_df.to_excel('scores.xlsx', index=False)
 
 
 
-def restoration_score(clarity_score, iso_score, noise_score, color_score, clarity_weight, iso_weight, noise_weight, color_weight):
+def restoration_score(clarity_score, contrast_score, noise_score, color_score, clarity_weight, contrast_weight, noise_weight, color_weight):
     """
     Calculates a general score for photo restoration based on clarity, ISO, noise, and color scores.
-
-    Author: Luxin Zhang
     """
 
-    total_weight = clarity_weight + iso_weight + noise_weight + color_weight
+    total_weight = clarity_weight + contrast_weight + noise_weight + color_weight
     if total_weight != 1:
         raise ValueError("The sum of weights must be 1.")
 
-    restoration_score = (clarity_score * clarity_weight) + \
+    restoration_score = (clarity_score * clarity_weight) + (contrast_score * contrast_weight) - \
                         (noise_score * noise_weight) + (color_score * color_weight)
     
     return restoration_score
 
 
-if __name__ == "__main__": 
-    # Testing
-    directory_path = './OldPic'
+
+def calculate_score(directory_path):
     image_paths = get_image_paths(directory_path)
 
     clarity_list = []
     noise_list = []
-    ISO_list = []
+    contrast_list = []
     color_list = []
-    general_list = []
+    final_list = []
 
     for path in image_paths:
         
+        # calculate clarity score and put them into the list
         clarity_score = calculate_clarity_score(path)
         clarity_list.append(clarity_score)
 
+        # calculate noise score and put them into the list
         noise_score = calculate_noise_score(path)
         noise_list.append(noise_score)
 
-        # iso_score = calculate_iso_score(path)
-        iso_score = 2000
-        ISO_list.append(iso_score)
+        # calculate contrast score and put them into the list
+        contrast_score = calculate_contrast(path)
+        contrast_list.append(contrast_score)
 
+        # calculate color score and put them into the list
         color_score = calculate_color_score(path)
         color_list.append(color_score)
 
+
         # Weights for each score
         clarity_weight = 0.4  # 40%
-        iso_weight = 0.2      # 20%
+        contrast_weight = 0.2      # 20%
         noise_weight = 0.1    # 10%
         color_weight = 0.3    # 30%
 
-        final_score = restoration_score(clarity_score, iso_score, noise_score, color_score, clarity_weight, iso_weight, noise_weight, color_weight)
-        general_list.append(final_score)
+        final_score = restoration_score(clarity_score, contrast_score, noise_score, color_score, clarity_weight, contrast_weight, noise_weight, color_weight)
+        final_list.append(final_score)
 
-print(f'Clarity list: {clarity_list}\n')
-print(f'Noise list: {noise_list}\n')
-print(f'ISO list: {ISO_list}\n')
-print(f'Color list: {color_list}\n')
-print(f'General list: {general_list}\n')
+    print(f'Clarity list: {clarity_list}\n')
+    print(f'Noise list: {noise_list}\n')
+    print(f'Contrast list: {contrast_list}\n')
+    print(f'Color list: {color_list}\n')
+    print(f'General list: {final_list}\n')
+
+    return [clarity_list, noise_list, contrast_list, color_list, final_list]
+
+if __name__ == "__main__":
+    print('Scores for old pictures')
+    old_list = calculate_score('./OldPic')
+
+    print('Scores for deep learning pictures')
+    dp_list = calculate_score('./DlPic')
+
+    print('Scores for self-implemented algorithm')
+    self_list = calculate_score('./SelfPic')
+
+    # Export the result into the excel
+    export_excel(old_list, dp_list, self_list)
+
+    # # test
+    # print("old_list: ", old_list)
+    # print("dp_list: ", dp_list)
+    # print("self_list: ", self_list)

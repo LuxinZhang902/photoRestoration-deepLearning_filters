@@ -31,8 +31,6 @@ def calculate_iso_score(image_path):
 
     Returns:
     double: The given score for ISO
-
-    Author: Luxin Zhang
     """
 
 

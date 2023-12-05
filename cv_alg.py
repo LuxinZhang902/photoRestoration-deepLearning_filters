@@ -69,8 +69,8 @@ def self_imp_alg(img):
     clarity['sharpen'] = cmp_clarity(sharpened_image)
     result_imgs['sharpen'] = sharpened_image
     
-    # Find the key corresponding to the largest value
-    best_filter = max(clarity.items(), key=lambda x: x[1])[0]
+    # Find the key corresponding to the value
+    best_filter = min(clarity.items(), key=lambda x: x[1])[0]
     return result_imgs[best_filter]
 
 

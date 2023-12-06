@@ -14,13 +14,29 @@ def sharpen_image(origin_img):
 
     return sharpened_image
 
-   
 def cmp_clarity(img):
-    """
+    '''
+    Calculate the clarity score based on the mse of two adjacent pixels in grayscale
+    :param img:narray 
+    :return: float 
+    '''
+    # Change into gray scale
+    img_gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+    
+    shape = np.shape(img_gray)
+    score = 0
+    for x in range(0, shape[0]-2):
+        for y in range(0, shape[1]):
+            score+=(int(img_gray[x+2,y])-int(img_gray[x,y]))**2
+    return score 
+
+"""  
+def cmp_clarity(img):
+    
     Calculate the clarity score of the given image using Gaussian Blur.
-    Input: image 2D matrix
+    Input:img  matrix
     Output: socre double
-    """
+    
     # Apply Gaussian Blur
     blurred_image = cv2.GaussianBlur(img, (5, 5), 0)
 
@@ -33,14 +49,10 @@ def cmp_clarity(img):
     # Calculate the clarity score as the mean of the gray difference
     score = np.mean(gray_difference)
     return score
-
+"""
 
 def self_imp_alg(img):
-    """
-    Do four types of processing and using clarity as the score to choose the one with best performance
-    Input: image 2D matrix
-    Output: image 2D matrix
-    """
+    
     k_size = 5
     kernel_size=(5,5)
     sigmaX=0
@@ -69,16 +81,12 @@ def self_imp_alg(img):
     clarity['sharpen'] = cmp_clarity(sharpened_image)
     result_imgs['sharpen'] = sharpened_image
     
-    # Find the key corresponding to the value
+    # Find the key corresponding to the largest value
     best_filter = min(clarity.items(), key=lambda x: x[1])[0]
-    return result_imgs[best_filter]
-
+    
+    return result_imgs[best_filter],best_filter
 
 def remove_existed_img(directory_path):
-    """
-    Ensure each time the output file is empty
-    Input: output file path str
-    """
     # Remove all files in the directory
     for filename in os.listdir(directory_path):
         file_path = os.path.join(directory_path, filename)
@@ -90,11 +98,9 @@ def remove_existed_img(directory_path):
         except Exception as e:
             print(f"Error removing {file_path}: {e}")
     print("Empty the file successfully.")
-
-
-
+    
 if __name__ == "__main__":
-    input_file_path = "./OldPic/"
+    input_file_path = "./Old pic/"
     output_file_path = "./SelfPic/"
     remove_existed_img(output_file_path)
     
@@ -109,8 +115,9 @@ if __name__ == "__main__":
         img = cv2.imread(input_image_path)
         
         # implement our algorithm
-        result_img = self_imp_alg(img)
+        result_img,filter_name = self_imp_alg(img)
         
+        print(filter_name)
         # save the result image
         cv2.imwrite(output_image_path,result_img)
     

@@ -1,9 +1,8 @@
 import cv2
 import numpy as np
 
-def calculate_clarity_score(image_path):
+def calculate_sharpness_score(image):
     # Read the image
-    image = cv2.imread(image_path)
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     # Apply Laplacian
@@ -15,11 +14,7 @@ def calculate_clarity_score(image_path):
     sobel_total = np.sqrt(sobelx**2 + sobely**2)
     sobel_mean = np.mean(sobel_total)
 
-    # Clarity score - you can experiment with how you combine these
-    clarity_score = 0.5 * laplacian_var + 0.5 * sobel_mean 
+    # Sharpness score - you can experiment with how you combine these
+    sharpness_score = 0.5 * laplacian_var + 0.5 * sobel_mean 
 
-    return clarity_score * 0.1
-
-# # Example usage
-# score = calculate_image_clarity('path_to_your_image.jpg')
-# print("Clarity Score:", score)
+    return sharpness_score * 0.1

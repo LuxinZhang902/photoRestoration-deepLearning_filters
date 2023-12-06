@@ -100,7 +100,7 @@ def remove_existed_img(directory_path):
     print("Empty the file successfully.")
     
 if __name__ == "__main__":
-    input_file_path = "./Old pic/"
+    input_file_path = "./OldPic/"
     output_file_path = "./SelfPic/"
     remove_existed_img(output_file_path)
     
